@@ -14,7 +14,7 @@ namespace Submissions.API.Repositories
 
         public ModerationQueueStorageRepository(IConfiguration configuration)
         {
-            var connectionString = configuration["ConnectionStrings:SeerAzureQueueStorageConnection"];
+            var connectionString = configuration["SeerAzureQueueStorageConnection"];
 
             var storageAccount = CloudStorageAccount.Parse(connectionString);
 
