@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Queue;
@@ -22,11 +22,21 @@ namespace Submissions.API.Repositories
             _queue = queueClient.GetQueueReference("moderation");
         }
 
+        public Task<CloudQueueMessage> GetQueueMessageAsync()
+        {
+            return _queue.GetMessageAsync(TimeSpan.FromMinutes(5), null, null);
+        }
+
         public async Task CreateMessageAsync(string message)
         {
             await _queue.CreateIfNotExistsAsync();
 
             await _queue.AddMessageAsync(new CloudQueueMessage(message));
+        }
+
+        public async Task DeleteQueueMessageAsync(string messageId, string popReceipt)
+        {
+            await _queue.DeleteMessageAsync(messageId, popReceipt);
         }
     }
 }
