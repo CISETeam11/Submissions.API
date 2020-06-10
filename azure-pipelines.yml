@@ -1,0 +1,49 @@
+trigger:
+  branches:
+    include:
+    - master
+    - dev
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Restore project dependencies'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build project - $(buildConfiguration)'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--no-restore --configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run tests - $(buildConfiguration)'
+  inputs:
+    command: test
+    projects: 'tests/*Tests/*.csproj'
+    arguments: '--no-build --configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish project - $(buildConfiguration)'
+  inputs:
+    command: 'publish'
+    projects: 'src/*.csproj'
+    publishWebProjects: false
+    arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
+    zipAfterPublish: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  condition: succeeded()
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(buildConfiguration)' 
+    artifactName: 'app-articles-ae-aut'

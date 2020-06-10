@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Queue;
@@ -7,11 +8,11 @@ using Submissions.API.Contracts;
 
 namespace Submissions.API.Repositories
 {
-    public class QueueStorageRepository : IQueueStorageRepository
+    public class ModerationQueueStorageRepository : IModerationQueueStorageRepository
     {
         private readonly CloudQueue _queue;
 
-        public QueueStorageRepository(IConfiguration configuration)
+        public ModerationQueueStorageRepository(IConfiguration configuration)
         {
             var connectionString = configuration["ConnectionStrings:SeerAzureQueueStorageConnection"];
 
@@ -25,6 +26,11 @@ namespace Submissions.API.Repositories
         public Task<CloudQueueMessage> GetQueueMessageAsync()
         {
             return _queue.GetMessageAsync(TimeSpan.FromMinutes(5), null, null);
+        }
+
+        public async Task<IEnumerable<CloudQueueMessage>> GetQueueMessagesAsync()
+        {
+            return await _queue.PeekMessagesAsync(32);
         }
 
         public async Task CreateMessageAsync(string message)
