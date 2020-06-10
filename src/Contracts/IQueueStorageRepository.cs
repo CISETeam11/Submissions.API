@@ -6,9 +6,9 @@ namespace Submissions.API.Contracts
 {
     public interface IQueueStorageRepository
     {
-        Task<CloudQueueMessage> GetQueueMessageAsync();
-        Task<IEnumerable<CloudQueueMessage>> GetQueueMessagesAsync();
-        Task CreateMessageAsync(string message);
-        Task DeleteQueueMessageAsync(string messageId, string popReceipt);
+        Task<CloudQueueMessage> GetQueueMessageAsync(string queue);
+        Task<IEnumerable<CloudQueueMessage>> GetQueueMessagesAsync(string queue);
+        Task CreateMessageAsync(string queue, string message);
+        Task DeleteQueueMessageAsync(string queue, string messageId, string popReceipt);
     }
 }

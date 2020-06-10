@@ -17,9 +17,10 @@ namespace Submissions.API.Controllers
     [Consumes(MediaTypeNames.Application.Json)]
     public class ModerationController : ControllerBase
     {
-        private readonly IModerationQueueStorageRepository _queueStorageRepository;
+        private readonly IQueueStorageRepository _queueStorageRepository;
+        private const string ModerationQueue = "moderation";
 
-        public ModerationController(IModerationQueueStorageRepository queueStorageRepository)
+        public ModerationController(IQueueStorageRepository queueStorageRepository)
         {
             _queueStorageRepository = queueStorageRepository;
         }
@@ -28,7 +29,7 @@ namespace Submissions.API.Controllers
         [ProducesResponseType(typeof(ModerationQueueMessage), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetModerationQueueMessageAsync()
         {
-            var queueMessage = await _queueStorageRepository.GetQueueMessageAsync();
+            var queueMessage = await _queueStorageRepository.GetQueueMessageAsync(ModerationQueue);
 
             var moderationQueueMessage = new ModerationQueueMessage
             {
@@ -44,7 +45,7 @@ namespace Submissions.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateModerationQueueMessageAsync([FromBody] [BindRequired] Article article)
         {
-            await _queueStorageRepository.CreateMessageAsync(JsonSerializer.Serialize(article));
+            await _queueStorageRepository.CreateMessageAsync(ModerationQueue, JsonSerializer.Serialize(article));
 
             return Ok(article);
         }
@@ -53,7 +54,7 @@ namespace Submissions.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteModerationQueueMessageAsync([FromBody] [BindRequired] QueueMessage queueMessage)
         {
-            await _queueStorageRepository.DeleteQueueMessageAsync(queueMessage.Id, queueMessage.PopReceipt);
+            await _queueStorageRepository.DeleteQueueMessageAsync(ModerationQueue, queueMessage.Id, queueMessage.PopReceipt);
 
             return NoContent();
         }
@@ -62,7 +63,7 @@ namespace Submissions.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<CloudQueueMessage>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetModerationQueueMessagesAsync()
         {
-            return Ok(await _queueStorageRepository.GetQueueMessagesAsync());
+            return Ok(await _queueStorageRepository.GetQueueMessagesAsync(ModerationQueue));
         }
     }
 }
