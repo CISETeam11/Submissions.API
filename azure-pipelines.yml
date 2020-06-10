@@ -46,4 +46,4 @@ steps:
   condition: succeeded()
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(buildConfiguration)' 
-    artifactName: 'app-articles-ae-aut'
+    artifactName: 'app-submissions-ae-aut'
