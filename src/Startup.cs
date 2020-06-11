@@ -48,7 +48,7 @@ namespace Submissions.API
             // TODO: Specify origin and headers
             services.AddCors(c =>  
             {  
-                c.AddPolicy("AllowAnyOrigin", options => options.AllowAnyOrigin().AllowAnyHeader());  
+                c.AddPolicy("AllowAnyOrigin", options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());  
             });
 
             services.AddRouting(options =>
