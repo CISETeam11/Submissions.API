@@ -24,7 +24,7 @@ namespace Submissions.API.Models
         [Range(0, int.MaxValue)]
         public int? Volume { get; set; }
 
-        [StringLength(12, MinimumLength = 3)]
+        [StringLength(12, MinimumLength = 1)]
         public string Pages { get; set; }
 
         [Required]
