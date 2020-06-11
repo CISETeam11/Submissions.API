@@ -2,9 +2,9 @@
 
 namespace Submissions.API.Models
 {
-    public class ModerationQueueMessage : QueueMessage
+    public class AnalysisQueueMessage : QueueMessage
     {
         [Required]
-        public SubmissionArticle Article { get; set; }
+        public ModerationArticle Article { get; set; }
     }
 }

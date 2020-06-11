@@ -35,7 +35,7 @@ namespace Submissions.API.Controllers
             {
                 Id = queueMessage.Id,
                 PopReceipt = queueMessage.PopReceipt,
-                Article = JsonSerializer.Deserialize<Article>(queueMessage.AsString)
+                Article = JsonSerializer.Deserialize<SubmissionArticle>(queueMessage.AsString)
             };
 
             return Ok(moderationQueueMessage);
@@ -43,7 +43,7 @@ namespace Submissions.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> CreateModerationQueueMessageAsync([FromBody] [BindRequired] Article article)
+        public async Task<IActionResult> CreateModerationQueueMessageAsync([FromBody] [BindRequired] SubmissionArticle article)
         {
             await _queueStorageRepository.CreateMessageAsync(ModerationQueue, JsonSerializer.Serialize(article));
 

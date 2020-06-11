@@ -28,13 +28,13 @@ namespace Submissions.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> CreateAnalysisQueueMessageAsync([FromBody] [BindRequired] ModerationQueueMessage moderationQueueMessage)
+        public async Task<IActionResult> CreateAnalysisQueueMessageAsync([FromBody] [BindRequired] AnalysisQueueMessage analysisQueueMessage)
         {
-            await _queueStorageRepository.DeleteQueueMessageAsync(ModerationQueue, moderationQueueMessage.Id, moderationQueueMessage.PopReceipt);
+            await _queueStorageRepository.DeleteQueueMessageAsync(ModerationQueue, analysisQueueMessage.Id, analysisQueueMessage.PopReceipt);
 
-            await _queueStorageRepository.CreateMessageAsync(AnalysisQueue, JsonSerializer.Serialize(moderationQueueMessage.Article));
+            await _queueStorageRepository.CreateMessageAsync(AnalysisQueue, JsonSerializer.Serialize(analysisQueueMessage.Article));
 
-            return Ok(moderationQueueMessage);
+            return Ok(analysisQueueMessage);
         }
 
         [HttpGet("submissions")]
